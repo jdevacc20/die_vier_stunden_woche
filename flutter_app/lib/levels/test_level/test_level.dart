@@ -14,6 +14,7 @@ class TestLevel extends StatelessWidget {
             onPressed: () {
               value.increaseLevel();
             },
+            color: Theme.of(context).primaryColor,
             child: const Text("Fertig!"),
           ),
         ),
