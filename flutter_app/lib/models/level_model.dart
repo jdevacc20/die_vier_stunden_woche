@@ -13,6 +13,7 @@ class LevelModel extends ChangeNotifier {
 
   ///increase the players current level
   Future<void> increaseLevel() async {
+    print("Increase Level!");
     int level = await getCurrentLevel();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(prefsLevel, level + 1);

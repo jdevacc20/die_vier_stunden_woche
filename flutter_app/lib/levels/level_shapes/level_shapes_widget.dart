@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/levels/home/levels.dart';
-import 'package:flutter_app/levels/level_shapes/feedback_dialog.dart';
 import 'package:flutter_app/models/level_model.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +21,7 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
   List<Color> _colors = [Colors.red, Colors.green, Colors.yellow, Colors.black];
   int _timeLeft = 0;
 
-  bool _showResponse = false;
-  bool _rightAnswer = false;
+  late LevelModel _levelModel;
 
   final List<Color> _availableColors = [
     Colors.green,
@@ -38,13 +35,12 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (_timeLeft > 0) {
         _timeLeft -= 1;
       } else if (_level == _levelCount) {
-        setState(() {
-          _level += 1; //game will stop after this
-        });
+        await _levelModel.increaseLevel();
+        timer.cancel();
       }
     });
   }
@@ -60,73 +56,63 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
     return Scaffold(
       body: Consumer<LevelModel>(
         builder: (context, value, child) {
-          if (_level > _levelCount) {
-            value.increaseLevel();
-            return const Center(
-              child: Text("Du hast gewonnen!"),
-            );
-          }
-          return Stack(
+          _levelModel = value;
+          return Column(
             children: [
-              Column(
-                children: [
-                  const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text("Farben erkennen!")),
-                  Text(
-                    "Level $_level",
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text("Klicke auf die Form, die rot eingefärbt ist!"),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _LevelShapesSingleShapeWidget(
-                                color: _colors[0],
-                                heightFactor: _heightFactors[0],
-                                widthFactor: _widthFactors[0],
-                                onTap: onShapeTap,
-                              ),
-                              _LevelShapesSingleShapeWidget(
-                                color: _colors[1],
-                                heightFactor: _heightFactors[1],
-                                widthFactor: _widthFactors[1],
-                                onTap: onShapeTap,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _LevelShapesSingleShapeWidget(
-                                color: _colors[2],
-                                heightFactor: _heightFactors[2],
-                                widthFactor: _widthFactors[2],
-                                onTap: onShapeTap,
-                              ),
-                              _LevelShapesSingleShapeWidget(
-                                color: _colors[3],
-                                heightFactor: _heightFactors[3],
-                                widthFactor: _widthFactors[3],
-                                onTap: onShapeTap,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+              const Padding(
+                  padding: EdgeInsets.all(10), child: Text("Farben erkennen!")),
+              Text(
+                "Level $_level",
+                style: const TextStyle(fontSize: 20),
               ),
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Text("Klicke auf die Form, die rot eingefärbt ist!"),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _LevelShapesSingleShapeWidget(
+                            color: _colors[0],
+                            heightFactor: _heightFactors[0],
+                            widthFactor: _widthFactors[0],
+                            onTap: onShapeTap,
+                          ),
+                          _LevelShapesSingleShapeWidget(
+                            color: _colors[1],
+                            heightFactor: _heightFactors[1],
+                            widthFactor: _widthFactors[1],
+                            onTap: onShapeTap,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _LevelShapesSingleShapeWidget(
+                            color: _colors[2],
+                            heightFactor: _heightFactors[2],
+                            widthFactor: _widthFactors[2],
+                            onTap: onShapeTap,
+                          ),
+                          _LevelShapesSingleShapeWidget(
+                            color: _colors[3],
+                            heightFactor: _heightFactors[3],
+                            widthFactor: _widthFactors[3],
+                            onTap: onShapeTap,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           );
         },

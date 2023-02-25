@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
         return FutureBuilder<int>(
           future: value.getCurrentLevel(),
           builder: ((context, snapshot) {
+            print("New Widget! ${snapshot.data}");
             int level = snapshot.data ?? 0;
             if (level < levels.length) {
               return levels[snapshot.data ?? 0];

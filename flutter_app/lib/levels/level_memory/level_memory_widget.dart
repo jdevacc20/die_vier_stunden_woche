@@ -22,6 +22,8 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
   List<int> _indexCardToClose = []; //index of the card to close
   int timeLeftSecondCard = 0; //time left to select your second card
 
+  late LevelModel _levelModel;
+
   @override
   void initState() {
     super.initState();
@@ -51,13 +53,7 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<LevelModel>(builder: (context, value, child) {
-        if (_solved.length == _cards.length) {
-          value.increaseLevel();
-          return const Center(
-            child: Text("Du hast gewonnen!!"),
-          );
-        }
-
+        _levelModel = value;
         return Column(
           children: [
             const Center(
@@ -143,7 +139,6 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
       });
     } else if (_curOpenIndex == index) {
       if (_cards[index].icon.icon == Icons.add && _solved.length == 10) {
-        print("YES!!");
         //other cards are solved
         if (_cards.length == 12) {
           // insert add-icon
@@ -183,6 +178,9 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
         _changeCardState(index, true); //open the other card
         _curOpenIndex = -1;
       });
+      if (_cards.length == _solved.length) {
+        _levelModel.increaseLevel();
+      }
     } else {
       //not the same card
       setState(() {
