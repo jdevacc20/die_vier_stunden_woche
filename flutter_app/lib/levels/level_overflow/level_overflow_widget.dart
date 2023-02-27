@@ -4,32 +4,43 @@ import 'package:flutter_app/levels/level_overflow/level_overflow_input_widget.da
 import 'package:provider/provider.dart';
 
 class LevelOverflowWidget extends StatelessWidget {
-  const LevelOverflowWidget({super.key});
+  final _formKey = GlobalKey<FormState>();
+
+  LevelOverflowWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<LevelModel>(
-        builder: (context, value, child) => Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const <Widget>[
-            LevelOverflowInputWidget(
-              labelLeft: "name:",
-              labelRight: "gender:",
-            ),
-            LevelOverflowInputWidget(
-              labelLeft: "age:",
-              labelRight: "birth month:",
-            ),
-            LevelOverflowInputWidget(
-              labelLeft: "username:",
-              labelRight: "favourite color:",
-              overflowInput: true,
-            ),
-          ],
-        )),
-      ),
+          builder: (context, value, child) => Center(
+                child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        LevelOverflowInputWidget(
+                          labelLeft: "name:",
+                          labelRight: "gender:",
+                        ),
+                        LevelOverflowInputWidget(
+                          labelLeft: "age:",
+                          labelRight: "birth month:",
+                        ),
+                        LevelOverflowInputWidget(
+                          labelLeft: "username:",
+                          labelRight: "favourite color:",
+                          overflowInput: true,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                value.increaseLevel();
+                              }
+                            },
+                            child: const Text("Submit"))
+                      ],
+                    )),
+              )),
     );
   }
 }

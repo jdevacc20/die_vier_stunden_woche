@@ -36,7 +36,8 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
                 widget.labelLeft,
                 style: TextStyle(fontSize: 20),
               ),
-              TextField(
+              TextFormField(
+                validator: validate,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), labelText: ''),
                 onChanged: widget.overflowInput ? onChangedInput : null,
@@ -53,9 +54,14 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
                 widget.labelRight,
                 style: TextStyle(fontSize: 20),
               ),
-              TextField(
+              TextFormField(
+                validator: validate,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: ''),
+                    border: OutlineInputBorder(),
+                    labelText: '',
+                    errorStyle: TextStyle(
+                      color: Colors.red,
+                    )),
                 enabled: !widget.overflowInput,
                 controller: widget.overflowInput ? controller : null,
               ),
@@ -65,6 +71,13 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
       ],
     );
   }
+
+  String? Function(String?) validate = (String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter some Text";
+    }
+    return null;
+  };
 
   void onChangedInput(String value) {
     if (value == "") {
@@ -86,34 +99,6 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
         text: sharedText.substring(0, 10),
         selection: TextSelection(baseOffset: 10, extentOffset: 10));
     controller.text = sharedText.substring(10);
-
-    // fence
-
-    /*
-    if (value.length <= 10) {
-      sharedText = value;
-      controller.text = "";
-    } else {
-      sharedText += value.substring(10);
-      controllerLeft.value = controllerLeft.value.copyWith(
-          text: sharedText.substring(0, 10),
-          selection: TextSelection(baseOffset: 10, extentOffset: 10));
-      controller.text = sharedText.substring(10);
-    }*/
-
-    /*
-    if (value.length > 10) {
-      //controllerLeft.text = value.substring(0, 10);
-      String text = controllerLeft.text;
-      controllerLeft.value = controllerLeft.value.copyWith(
-          text: text.substring(0, 10),
-          selection: TextSelection(baseOffset: 10, extentOffset: 10));
-      controller.text = value.substring(10);
-      print(value.substring(10));
-    } else {
-      controller.text = "";
-    }
-    */
   }
 }
 
