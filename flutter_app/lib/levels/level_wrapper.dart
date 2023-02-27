@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/levels/home/levels.dart';
 import 'package:provider/provider.dart';
 
 import '../models/level_model.dart';
@@ -18,7 +19,7 @@ class LevelWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LevelModel>(builder: (context, value, child) {
+    return Consumer<LevelModel>(builder: (context, levelModel, child) {
       return SafeArea(
         child: Scaffold(
           body: Column(
@@ -40,13 +41,16 @@ class LevelWrapper extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.01,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: const LinearProgressIndicator(
-                      backgroundColor: Colors.amber,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.blueGrey),
-                      //TODO: levelModel.getProgress()
-                      value: 0.7,
-                    ),
+                    child: FutureBuilder(
+                        future: levelModel.getCurrentLevel(),
+                        builder: (context, snapshot) {
+                          return LinearProgressIndicator(
+                            backgroundColor: Colors.amber,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.blueGrey),
+                            value: (snapshot.data ?? 0) / levels.length,
+                          );
+                        }),
                   ),
                 ),
               ),
@@ -67,8 +71,8 @@ class LevelWrapper extends StatelessWidget {
               ),
               if (done)
                 GestureDetector(
-                  onTap: () {
-                    value.increaseLevel();
+                  onTap: () async {
+                    await levelModel.increaseLevel();
                   },
                   child: Container(
                     color: Theme.of(context).primaryColor,
