@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/levels/level_memory/level_memory_card_widget.dart';
-import 'package:flutter_app/models/level_model.dart';
+import 'package:flutter_app/levels/level_wrapper.dart';
 import 'dart:async';
-
-import 'package:provider/provider.dart';
 
 class LevelMemoryWidget extends StatefulWidget {
   const LevelMemoryWidget({super.key});
@@ -13,6 +11,7 @@ class LevelMemoryWidget extends StatefulWidget {
 }
 
 class _LevelMemoryWidget extends State<LevelMemoryWidget> {
+  bool done = false;
   int _curOpenIndex = -1; //index of the current open card
   List<LevelMemoryCardWidget> _cards = []; //all _cards
   List<int> _solved = []; //list of all _solved _cards
@@ -22,12 +21,10 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
   List<int> _indexCardToClose = []; //index of the card to close
   int timeLeftSecondCard = 0; //time left to select your second card
 
-  late LevelModel _levelModel;
-
   @override
   void initState() {
     super.initState();
-    _cards = generateMemory_Cards();
+    _cards = generateMemoryCards();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_timeLeft == 1) {
@@ -51,29 +48,18 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<LevelModel>(builder: (context, value, child) {
-        _levelModel = value;
-        return Column(
-          children: [
-            const Center(
-              child: Text(
-                "Das ist ein Gedächtnistest!",
-              ),
-            ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                children: _cards,
-              ),
-            )
-          ],
-        );
-      }),
-    );
+      return LevelWrapper(
+        title: "Memory Test",
+        description: "Find pairs of all Icons!",
+        done: done,
+        levelChild: GridView.count(
+          crossAxisCount: 3,
+          children: _cards,
+        ),
+      );
   }
 
-  List<LevelMemoryCardWidget> generateMemory_Cards() {
+  List<LevelMemoryCardWidget> generateMemoryCards() {
     List<int> items = [0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6];
     items.shuffle();
     return List.generate(items.length, (index) {
@@ -179,7 +165,7 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
         _curOpenIndex = -1;
       });
       if (_cards.length == _solved.length) {
-        _levelModel.increaseLevel();
+        setState((){done = true;});
       }
     } else {
       //not the same card
@@ -195,14 +181,14 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
   ///replace old card with new card with new state
   void _changeCardState(int index, bool open) {
     LevelMemoryCardWidget old = _cards[index];
-    List<LevelMemoryCardWidget> new_cards = List.from(_cards);
-    new_cards[index] = LevelMemoryCardWidget(
+    List<LevelMemoryCardWidget> newCards = List.from(_cards);
+    newCards[index] = LevelMemoryCardWidget(
       icon: old.icon,
       iconType: old.iconType,
       onTap: onCardIsPressed,
       index: index,
       open: open,
     );
-    _cards = new_cards;
+    _cards = newCards;
   }
 }
