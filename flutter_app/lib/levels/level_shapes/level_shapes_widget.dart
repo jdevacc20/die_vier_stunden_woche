@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/levels/level_wrapper.dart';
 import 'package:flutter_app/models/level_model.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class LevelShapesWidget extends StatefulWidget {
 }
 
 class _LevelShapesWidget extends State<LevelShapesWidget> {
+  bool done = false;
   Timer _timer = Timer(const Duration(seconds: 0), () {});
   int _level = 1;
   final int _levelCount = 3;
@@ -20,8 +22,6 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
   List<double> _widthFactors = [0.4, 0.6, 0.3, 0.6];
   List<Color> _colors = [Colors.red, Colors.green, Colors.yellow, Colors.black];
   int _timeLeft = 0;
-
-  late LevelModel _levelModel;
 
   final List<Color> _availableColors = [
     Colors.green,
@@ -39,7 +39,9 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
       if (_timeLeft > 0) {
         _timeLeft -= 1;
       } else if (_level == _levelCount) {
-        await _levelModel.increaseLevel();
+        setState(() {
+          done = true;
+        });
         timer.cancel();
       }
     });
@@ -53,69 +55,51 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<LevelModel>(
-        builder: (context, value, child) {
-          _levelModel = value;
-          return Column(
-            children: [
-              const Padding(
-                  padding: EdgeInsets.all(10), child: Text("Farben erkennen!")),
-              Text(
-                "Level $_level",
-                style: const TextStyle(fontSize: 20),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(10),
-                child: Text("Klicke auf die Form, die rot eingefärbt ist!"),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _LevelShapesSingleShapeWidget(
-                            color: _colors[0],
-                            heightFactor: _heightFactors[0],
-                            widthFactor: _widthFactors[0],
-                            onTap: onShapeTap,
-                          ),
-                          _LevelShapesSingleShapeWidget(
-                            color: _colors[1],
-                            heightFactor: _heightFactors[1],
-                            widthFactor: _widthFactors[1],
-                            onTap: onShapeTap,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _LevelShapesSingleShapeWidget(
-                            color: _colors[2],
-                            heightFactor: _heightFactors[2],
-                            widthFactor: _widthFactors[2],
-                            onTap: onShapeTap,
-                          ),
-                          _LevelShapesSingleShapeWidget(
-                            color: _colors[3],
-                            heightFactor: _heightFactors[3],
-                            widthFactor: _widthFactors[3],
-                            onTap: onShapeTap,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+    return LevelWrapper(
+      title: "Eyesight Test",
+      description: "Click on the red shape!",
+      done: done,
+      levelChild: Column(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _LevelShapesSingleShapeWidget(
+                  color: _colors[0],
+                  heightFactor: _heightFactors[0],
+                  widthFactor: _widthFactors[0],
+                  onTap: onShapeTap,
                 ),
-              )
-            ],
-          );
-        },
+                _LevelShapesSingleShapeWidget(
+                  color: _colors[1],
+                  heightFactor: _heightFactors[1],
+                  widthFactor: _widthFactors[1],
+                  onTap: onShapeTap,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _LevelShapesSingleShapeWidget(
+                  color: _colors[2],
+                  heightFactor: _heightFactors[2],
+                  widthFactor: _widthFactors[2],
+                  onTap: onShapeTap,
+                ),
+                _LevelShapesSingleShapeWidget(
+                  color: _colors[3],
+                  heightFactor: _heightFactors[3],
+                  widthFactor: _widthFactors[3],
+                  onTap: onShapeTap,
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
