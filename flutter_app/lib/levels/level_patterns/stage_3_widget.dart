@@ -127,6 +127,7 @@ class _Stage3WidgetState extends State<Stage3Widget> {
               // fence
 
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "a",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -145,6 +146,7 @@ class _Stage3WidgetState extends State<Stage3Widget> {
                 barColor: 0,
               ),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "b",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -163,6 +165,7 @@ class _Stage3WidgetState extends State<Stage3Widget> {
                 barColor: 1,
               ),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "c",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -177,13 +180,14 @@ class _Stage3WidgetState extends State<Stage3Widget> {
           SizedBox(height: 50),
 
           // Submit
-          ElevatedButton(
+          MaterialButton(
             onPressed: () {
               if (_selection == "a" && dragged) {
                 //value.increaseLevel();
                 widget.nextLevel();
               }
             },
+            color: Theme.of(context).primaryColor,
             child: const Text("Submit"),
           ),
         ],

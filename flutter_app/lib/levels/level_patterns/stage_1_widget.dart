@@ -85,6 +85,7 @@ class _Stage1WidgetState extends State<Stage1Widget> {
             Column(children: [
               TileWidget(shape: 2, size: 2, bar: false),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "a",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -97,6 +98,7 @@ class _Stage1WidgetState extends State<Stage1Widget> {
             Column(children: [
               TileWidget(shape: 0, size: 1, bar: false),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "b",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -109,6 +111,7 @@ class _Stage1WidgetState extends State<Stage1Widget> {
             Column(children: [
               TileWidget(shape: 1, size: 2, bar: false),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "c",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -123,13 +126,14 @@ class _Stage1WidgetState extends State<Stage1Widget> {
           SizedBox(height: 50),
 
           // Submit
-          ElevatedButton(
+          MaterialButton(
             onPressed: () {
               if (_selection == "c") {
                 //value.increaseLevel();
                 widget.nextLevel();
               }
             },
+            color: Theme.of(context).primaryColor,
             child: const Text("Submit"),
           ),
         ],

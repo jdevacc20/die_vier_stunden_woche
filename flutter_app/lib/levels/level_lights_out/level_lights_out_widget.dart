@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/levels/level_wrapper.dart';
+import 'package:flutter_app/models/settings_model.dart';
+import 'package:provider/provider.dart';
 
 class LevelLightsOutWidget extends StatefulWidget {
   const LevelLightsOutWidget({super.key});
@@ -16,33 +18,44 @@ class _LevelLightsOutWidget extends State<LevelLightsOutWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double size = min(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height) *
-        0.8;
-    if (darkMode == null) {
-      darkMode = context.isDarkMode;
-    } else if (darkMode != context.isDarkMode) {
-      setState(() {
-        darkMode = context.isDarkMode;
-        _done = true;
-      });
-    }
-    return LevelWrapper(
-      title: "Logical Thinking",
-      description:
-          context.isDarkMode ? "Switch the light on!" : "Switch the light out!",
-      done: _done,
-      levelChild: Center(
-        child: SizedBox(
-          height: size,
-          width: size,
-          child: _LightsOutWidget(
-            cols: 3,
-            done: _done,
-            darkMode: darkMode ?? false,
+    return Consumer<SettingsModel>(
+      builder: ((context, settingsModel, child) {
+        double size = min(MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height) *
+            0.8;
+
+        //current dark mode on (provider or system)
+        bool curDarkMode =
+            settingsModel.getThemeMode(context) == ThemeMode.dark;
+
+        if (darkMode == null) {
+          darkMode = curDarkMode;
+        } else if (darkMode != curDarkMode) {
+          darkMode = curDarkMode;
+          _done = true;
+        }
+        return LevelWrapper(
+          title: "Logical Thinking",
+          description: _done
+              ? "Solved!"
+              : context.isDarkMode
+                  ? "Switch the light on!"
+                  : "Switch the light out!",
+          done: _done,
+          hint: "denk nach pisser",
+          levelChild: Center(
+            child: SizedBox(
+              height: size,
+              width: size,
+              child: _LightsOutWidget(
+                cols: 3,
+                done: _done,
+                darkMode: darkMode ?? false,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
@@ -160,13 +173,5 @@ class _LightsOutState extends State<_LightsOutWidget> {
         ),
       ),
     );
-  }
-}
-
-extension DarkMode on BuildContext {
-  /// is dark mode currently enabled?
-  bool get isDarkMode {
-    final brightness = MediaQuery.of(this).platformBrightness;
-    return brightness == Brightness.dark;
   }
 }
