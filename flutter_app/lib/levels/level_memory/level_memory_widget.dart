@@ -25,19 +25,24 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
   void initState() {
     super.initState();
     _cards = generateMemoryCards();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_timeLeft == 1) {
-          for (int index in _indexCardToClose) {
-            _changeCardState(index, false);
-          }
-          _indexCardToClose = [];
-          _timeLeft = 0;
-        } else if (_timeLeft > 1) {
-          _timeLeft -= 1;
-        }
-      });
-    });
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(
+          () {
+            if (_timeLeft == 1) {
+              for (int index in _indexCardToClose) {
+                _changeCardState(index, false);
+              }
+              _indexCardToClose = [];
+              _timeLeft = 0;
+            } else if (_timeLeft > 1) {
+              _timeLeft -= 1;
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -48,15 +53,15 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-      return LevelWrapper(
-        title: "Memory Test",
-        description: "Find pairs of all Icons!",
-        done: done,
-        levelChild: GridView.count(
-          crossAxisCount: 3,
-          children: _cards,
-        ),
-      );
+    return LevelWrapper(
+      title: "Memory Test",
+      description: "Find pairs of all Icons!",
+      done: done,
+      levelChild: GridView.count(
+        crossAxisCount: 3,
+        children: _cards,
+      ),
+    );
   }
 
   List<LevelMemoryCardWidget> generateMemoryCards() {
@@ -165,7 +170,9 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
         _curOpenIndex = -1;
       });
       if (_cards.length == _solved.length) {
-        setState((){done = true;});
+        setState(() {
+          done = true;
+        });
       }
     } else {
       //not the same card

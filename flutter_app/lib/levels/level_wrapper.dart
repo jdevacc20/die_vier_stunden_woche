@@ -106,6 +106,7 @@ class _LevelWrapperState extends State<LevelWrapper> {
                       horizontal: MediaQuery.of(context).size.width * 0.1),
                   child: Text(
                     widget.description,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),

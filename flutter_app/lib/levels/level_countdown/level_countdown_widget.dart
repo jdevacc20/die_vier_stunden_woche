@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/levels/level_sequence/level_sequence_widget.dart';
 
 class LevelCountdownWidget extends StatefulWidget {
   const LevelCountdownWidget({super.key});
@@ -12,7 +11,6 @@ class LevelCountdownWidget extends StatefulWidget {
 
 class _LevelCountdownWidget extends State<LevelCountdownWidget> {
   bool _restart = false;
-  bool _mouse_finished = false;
   bool _leftToRight = true;
   bool _isPressed = false;
   double _timeTillRestart = 0;
