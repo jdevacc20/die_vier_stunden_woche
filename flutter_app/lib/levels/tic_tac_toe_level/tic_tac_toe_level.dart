@@ -15,7 +15,9 @@ enum FieldState { empty, player, computer }
 enum GameState { starting, running, lost, won }
 
 class TicTacToe {
-  List<FieldState> fieldStates = List.filled(9, FieldState.empty);
+  List<FieldState> fieldStates;
+
+  TicTacToe({required this.fieldStates});
 
   bool isFull() {
     if (!fieldStates.contains(FieldState.empty)) {
@@ -50,12 +52,16 @@ class TicTacToe {
   void reset() {
     fieldStates = List.filled(9, FieldState.empty);
   }
+
+  factory TicTacToe.copy(TicTacToe other) {
+    return TicTacToe(fieldStates: List.from(other.fieldStates));
+  }
 }
 
 class _TicTacToeLevelState extends State<TicTacToeLevel> {
   bool computerTurn = false;
   GameState gameState = GameState.starting;
-  TicTacToe game = TicTacToe();
+  TicTacToe game = TicTacToe(fieldStates: List.filled(9, FieldState.empty));
 
   @override
   void initState() {
@@ -65,11 +71,10 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
 
   void reset() {
     game.reset();
+    // ignore: unused_local_variable
     final startingGameTimer = Timer(
       const Duration(milliseconds: 300),
-      () => {
-        startGame()
-      },
+      () => {startGame()},
     );
   }
 
@@ -81,7 +86,8 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
   }
 
   void fieldClicked(int index) {
-    if (game.fieldStates[index] == FieldState.empty && gameState == GameState.running) {
+    if (game.fieldStates[index] == FieldState.empty &&
+        gameState == GameState.running) {
       setState(() {
         game.fieldStates[index] = FieldState.player;
       });
@@ -101,12 +107,40 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
   }
 
   void computer() {
-    if(gameState != GameState.running){return;}
+    if (gameState != GameState.running) {
+      return;
+    }
 
-    //Nikola replace this shitty code with your shitty code
-    //          |
-    //          |
-    //          V
+    for (var i = 0; i < 9; i++) {
+      if (game.fieldStates[i] == FieldState.empty) {
+        TicTacToe gameCopy = TicTacToe.copy(game);
+        gameCopy.fieldStates[i] = FieldState.computer;
+        if (gameCopy.checkWin() == FieldState.computer) {
+          setState(() {
+            game.fieldStates[i] = FieldState.computer;
+            computerTurn = false;
+          });
+          check();
+          return;
+        }
+      }
+    }
+
+    for (var i = 0; i < 9; i++) {
+      if (game.fieldStates[i] == FieldState.empty) {
+        TicTacToe gameCopy = TicTacToe.copy(game);
+        gameCopy.fieldStates[i] = FieldState.player;
+        if (gameCopy.checkWin() == FieldState.player) {
+          setState(() {
+            game.fieldStates[i] = FieldState.computer;
+            computerTurn = false;
+          });
+          check();
+          return;
+        }
+      }
+    }
+
     for (var i = 0; i < 9; i++) {
       if (game.fieldStates[i] == FieldState.empty) {
         setState(() {
@@ -114,26 +148,29 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
           computerTurn = false;
         });
         check();
-        break;
+        return;
       }
     }
-    //          A
-    //          |
-    //          |
   }
 
-  void check(){
-    if(game.checkWin() == FieldState.player){
-      setState(() {gameState = GameState.won;});
+  void check() {
+    if (game.checkWin() == FieldState.player) {
+      setState(() {
+        gameState = GameState.won;
+      });
       print("Win");
       return;
     }
-    if(game.checkWin() == FieldState.computer){
-      setState(() {gameState = GameState.lost;});
+    if (game.checkWin() == FieldState.computer) {
+      setState(() {
+        gameState = GameState.lost;
+      });
       return;
     }
-    if(game.isFull()){
-      setState(() {gameState = GameState.lost;});
+    if (game.isFull()) {
+      setState(() {
+        gameState = GameState.lost;
+      });
       return;
     }
   }
@@ -219,36 +256,41 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
-                    children: gameState == GameState.lost?[
-                      const Text(
-                        "You failed!",
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          reset();
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.height * 0.05,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 0),
-                                  blurStyle: BlurStyle.normal,
-                                  blurRadius: 10,
-                                )
-                              ]),
-                          child: const FittedBox(child: Icon(Icons.refresh)),
-                        ),
-                      ),
-                    ]:[],
+                    children: gameState == GameState.lost
+                        ? [
+                            const Text(
+                              "You failed!",
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                reset();
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                width:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context).primaryColor,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 0),
+                                        blurStyle: BlurStyle.normal,
+                                        blurRadius: 10,
+                                      )
+                                    ]),
+                                child:
+                                    const FittedBox(child: Icon(Icons.refresh)),
+                              ),
+                            ),
+                          ]
+                        : [],
                   ),
                 ),
               ],
