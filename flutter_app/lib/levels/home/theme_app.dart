@@ -23,16 +23,24 @@ class _ThemeAppState extends State<ThemeApp> {
             ///Update this theme for changes in light mode
             theme: ThemeData(
               brightness: Brightness.light,
-              primaryColor: Colors.green,
+              primaryColor: const Color(0xFFee6002),
+              shadowColor: const Color(0xFFfa8100),
+              errorColor: const Color(0xFFD50000),
+              disabledColor: const Color(0xFFBDBDBD),
+              backgroundColor: const Color(0xFFE0E0E0),
             ),
 
             ///Update this theme for changes in dark mode
             darkTheme: ThemeData(
               brightness: Brightness.dark,
-              primaryColor: Colors.purple,
+              primaryColor: const Color(0xFF311B92),
+              shadowColor: const Color(0xFF512DA8),
+              errorColor: const Color(0xFFD50000),
+              disabledColor: const Color(0xFFBDBDBD),
+              backgroundColor: const Color(0xFF424242),
             ),
-            home: const HomePage(),
             themeMode: settingsModel.getThemeMode(null),
+            home: const HomePage(),
           )),
     );
   }

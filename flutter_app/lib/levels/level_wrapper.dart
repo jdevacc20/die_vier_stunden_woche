@@ -90,9 +90,9 @@ class _LevelWrapperState extends State<LevelWrapper> {
                         future: levelModel.getCurrentLevel(),
                         builder: (context, snapshot) {
                           return LinearProgressIndicator(
-                            backgroundColor: Colors.amber,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.blueGrey),
+                            backgroundColor: Theme.of(context).backgroundColor,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor),
                             value: (snapshot.data ?? 0) / levels.length,
                           );
                         }),
