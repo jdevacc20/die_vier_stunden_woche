@@ -95,10 +95,18 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
       sharedText = value;
     }
 
-    controllerLeft.value = controllerLeft.value.copyWith(
-        text: sharedText.substring(0, 10),
-        selection: TextSelection(baseOffset: 10, extentOffset: 10));
-    controller.text = sharedText.substring(10);
+    if (sharedText.length > 10) {
+      controllerLeft.value = controllerLeft.value.copyWith(
+          text: sharedText.substring(0, 10),
+          selection: TextSelection(baseOffset: 10, extentOffset: 10));
+      controller.text = sharedText.substring(10);
+    } else {
+      controllerLeft.value = controllerLeft.value.copyWith(
+          text: sharedText.substring(0, sharedText.length),
+          selection: TextSelection(
+              baseOffset: sharedText.length, extentOffset: sharedText.length));
+      controller.text = "";
+    }
   }
 }
 
