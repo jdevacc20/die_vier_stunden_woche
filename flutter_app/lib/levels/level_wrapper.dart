@@ -61,6 +61,7 @@ class LevelWrapper extends StatelessWidget {
                       horizontal: MediaQuery.of(context).size.width * 0.1),
                   child: Text(
                     description,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
