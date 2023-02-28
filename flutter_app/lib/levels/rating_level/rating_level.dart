@@ -42,6 +42,7 @@ class _RatingLevelState extends State<RatingLevel> {
       description:
           "We would pretty much appreciate it if you give us honest feedback about our App.\n Thank you!",
       done: done,
+      hint: "denk nach pisser",
       levelChild: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

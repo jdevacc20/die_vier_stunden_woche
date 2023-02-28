@@ -42,6 +42,7 @@ class _LevelLightsOutWidget extends State<LevelLightsOutWidget> {
                   ? "Switch the light on!"
                   : "Switch the light out!",
           done: _done,
+          hint: "denk nach pisser",
           levelChild: Center(
             child: SizedBox(
               height: size,

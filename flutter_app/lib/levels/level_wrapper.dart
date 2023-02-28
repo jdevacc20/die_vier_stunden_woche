@@ -8,6 +8,7 @@ import '../models/level_model.dart';
 class LevelWrapper extends StatefulWidget {
   final String title;
   final String description;
+  final String hint;
   final bool done;
   final Widget levelChild;
 
@@ -16,14 +17,17 @@ class LevelWrapper extends StatefulWidget {
       required this.title,
       required this.description,
       required this.done,
-      required this.levelChild});
+      required this.levelChild,
+      required this.hint,
+      });
 
   @override
   State<LevelWrapper> createState() => _LevelWrapperState();
 }
 
 class _LevelWrapperState extends State<LevelWrapper> {
-  bool _menuOpen = false;
+  bool _settingsOpen = false;
+  bool _hintOpen = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,45 @@ class _LevelWrapperState extends State<LevelWrapper> {
               Row(
                 children: [
                   Expanded(
-                    child: Container(),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: FittedBox(
+                          
+                          child: AnimatedScale(
+                            scale: _hintOpen ? 1.2: 1,
+                            duration: const Duration(milliseconds: 200),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _hintOpen = true;
+                                });
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusDirectional.only(
+                                      bottomEnd: Radius.circular(0),
+                                      bottomStart: Radius.circular(0),
+                                      topEnd: Radius.circular(10),
+                                      topStart: Radius.circular(10),
+                                    ),
+                                  ),
+                                  builder: ((context) {
+                                    return _HintBottomSheetDialogWidget(hint: widget.hint,);
+                                  }),
+                                ).whenComplete(() {
+                                  setState(() {
+                                    _hintOpen = false;
+                                  });
+                                });
+                              },
+                              child: const Icon(Icons.lightbulb),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   Text(
                     widget.title,
@@ -48,32 +90,40 @@ class _LevelWrapperState extends State<LevelWrapper> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: FittedBox(
-                              child: AnimatedRotation(
-                            turns: _menuOpen ? (6 / 45) : 0,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: FittedBox(
+                          child: AnimatedRotation(
+                            turns: _settingsOpen ? (6 / 45) : 0,
                             duration: const Duration(milliseconds: 200),
                             child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _menuOpen = true;
-                                  });
-                                  showModalBottomSheet(
-                                    context: context,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                              onTap: () {
+                                setState(() {
+                                  _settingsOpen = true;
+                                });
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusDirectional.only(
+                                      bottomEnd: Radius.circular(0),
+                                      bottomStart: Radius.circular(0),
+                                      topEnd: Radius.circular(10),
+                                      topStart: Radius.circular(10),
                                     ),
-                                    builder: ((context) {
-                                      return _BottomSheetDialogWidget();
-                                    }),
-                                  ).whenComplete(() {
-                                    setState(() {
-                                      _menuOpen = false;
-                                    });
+                                  ),
+                                  builder: ((context) {
+                                    return _SettingsBottomSheetDialogWidget();
+                                  }),
+                                ).whenComplete(() {
+                                  setState(() {
+                                    _settingsOpen = false;
                                   });
-                                },
-                                child: const Icon(Icons.settings)),
-                          ))),
+                                });
+                              },
+                              child: const Icon(Icons.settings),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -140,12 +190,36 @@ class _LevelWrapperState extends State<LevelWrapper> {
   }
 }
 
-class _BottomSheetDialogWidget extends StatefulWidget {
+class _HintBottomSheetDialogWidget extends StatefulWidget {
+  final String hint;
+
+  const _HintBottomSheetDialogWidget({required this.hint});
+
   @override
-  State<StatefulWidget> createState() => _BottomSheetDialogState();
+  State<StatefulWidget> createState() => _HintBottomSheetDialogState();
 }
 
-class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
+class _HintBottomSheetDialogState extends State<_HintBottomSheetDialogWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Text(widget.hint),
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsBottomSheetDialogWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _SettingsBottomSheetDialogState();
+}
+
+class _SettingsBottomSheetDialogState
+    extends State<_SettingsBottomSheetDialogWidget> {
   bool _sound = false;
   bool _darkMode = false;
   int _simpleMode = 0;
