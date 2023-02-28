@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/levels/level_wrapper.dart';
 
 class LevelCountdownWidget extends StatefulWidget {
   const LevelCountdownWidget({super.key});
@@ -53,15 +54,12 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return LevelWrapper(
+      title: "Race",
+      description: "Reach the destination!",
+      done: _gameFinished,
+      levelChild: Column(
         children: [
-          const Center(
-            child: Text(
-              "Erreiche das Ziel!",
-              style: TextStyle(fontSize: 30),
-            ),
-          ),
           AnimatedOpacity(
             opacity: _restart ? 1 : 0,
             duration: const Duration(seconds: 2),
@@ -70,8 +68,8 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    "Das hat nicht gereicht, Du musst",
-                    style: TextStyle(fontSize: 30),
+                    "Lost, you have to",
+                    style: TextStyle(fontSize: 20),
                   ),
                   GestureDetector(
                     onLongPress: () {
@@ -88,8 +86,8 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
                       );
                     },
                     child: const Text(
-                      " durchhalten!",
-                      style: TextStyle(fontSize: 30),
+                      " hang on!",
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
@@ -98,7 +96,7 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            height: MediaQuery.of(context).size.height * 0.3,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: _SliderWidget(
@@ -118,7 +116,7 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            height: MediaQuery.of(context).size.height * 0.3,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: _SliderWidget(
@@ -147,8 +145,8 @@ class _LevelCountdownWidget extends State<LevelCountdownWidget> {
               opacity: _showPrankText ? 1 : 0,
               duration: const Duration(seconds: 2),
               child: const Text(
-                "Dachtest du echt, dass es so leicht ist?",
-                style: TextStyle(fontSize: 30),
+                "Did you really think it was that easy?",
+                style: TextStyle(fontSize: 20),
               ),
             ),
           ),
@@ -226,7 +224,7 @@ class _SliderWidgetState extends State<_SliderWidget> {
         alignment: Alignment.bottomCenter,
         child: Container(
           height: 2,
-          color: Colors.black,
+          color: Theme.of(context).dividerColor,
         ),
       ),
     ]);

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/levels/level_wrapper.dart';
 
 double fontSize = 30;
 
@@ -25,13 +26,16 @@ class _LevelSequenceWidget extends State<LevelSequenceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return LevelWrapper(
+      title: "Number Sequence",
+      description: "",
+      done: _done,
+      levelChild: SingleChildScrollView(
         child: Column(
           children: [
             const Center(
               child: Text(
-                "Vervollständige die Zahlenfolge",
+                "Complete the sequence of numbers",
                 style: TextStyle(fontSize: 20),
               ),
             ),
@@ -58,7 +62,7 @@ class _LevelSequenceWidget extends State<LevelSequenceWidget> {
               padding: EdgeInsets.all(10),
               child: Center(
                 child: Text(
-                  "Finde den nächsten Buchstaben",
+                  "Find the next number",
                   style: TextStyle(fontSize: 20),
                 ),
               ),
@@ -160,15 +164,15 @@ class _InputFeedback extends StatelessWidget {
       width: MediaQuery.of(context).size.width * (1 / 8),
       child: Opacity(
         opacity: error ? 1 : 0,
-        child: const AspectRatio(
+        child: AspectRatio(
           aspectRatio: 1,
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: FittedBox(
               fit: BoxFit.fill,
               child: Icon(
                 Icons.cancel_outlined,
-                color: Colors.red,
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
           ),
@@ -199,6 +203,7 @@ class _NumberTextField extends StatelessWidget {
               border: InputBorder.none,
               counterText: "",
             ),
+            cursorColor: Theme.of(context).shadowColor,
             maxLength: 1,
             textAlignVertical: TextAlignVertical.top,
             textAlign: TextAlign.center,

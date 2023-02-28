@@ -38,15 +38,17 @@ class _LevelOverflowWidgetState extends State<LevelOverflowWidget> {
                 labelRight: "favourite color:",
                 overflowInput: true,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        done = true;
-                      });
-                    }
-                  },
-                  child: const Text("Submit"))
+              MaterialButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      done = true;
+                    });
+                  }
+                },
+                color: Theme.of(context).primaryColor,
+                child: const Text("Submit"),
+              )
             ],
           ),
         ),

@@ -99,6 +99,7 @@ class _Stage2WidgetState extends State<Stage2Widget> {
                 barOrientation: 1,
               ),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "a",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -116,6 +117,7 @@ class _Stage2WidgetState extends State<Stage2Widget> {
                 barOrientation: 2,
               ),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "b",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -133,6 +135,7 @@ class _Stage2WidgetState extends State<Stage2Widget> {
                 barOrientation: 1,
               ),
               Radio(
+                activeColor: Theme.of(context).shadowColor,
                 value: "c",
                 groupValue: _selection,
                 onChanged: (value) {
@@ -147,12 +150,13 @@ class _Stage2WidgetState extends State<Stage2Widget> {
           SizedBox(height: 50),
 
           // Submit
-          ElevatedButton(
+          MaterialButton(
             onPressed: () {
               if (_selection == "b") {
                 widget.nextLevel();
               }
             },
+            color: Theme.of(context).primaryColor,
             child: const Text("Submit"),
           ),
         ],

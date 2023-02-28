@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/levels/level_wrapper.dart';
 import 'package:provider/provider.dart';
 import '../../models/level_model.dart';
 
@@ -59,6 +61,7 @@ class TicTacToe {
 }
 
 class _TicTacToeLevelState extends State<TicTacToeLevel> {
+  bool _done = false;
   bool computerTurn = false;
   GameState gameState = GameState.starting;
   TicTacToe game = TicTacToe(fieldStates: List.filled(9, FieldState.empty));
@@ -157,8 +160,8 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
     if (game.checkWin() == FieldState.player) {
       setState(() {
         gameState = GameState.won;
+        _done = true;
       });
-      print("Win");
       return;
     }
     if (game.checkWin() == FieldState.computer) {
@@ -177,126 +180,104 @@ class _TicTacToeLevelState extends State<TicTacToeLevel> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Consumer<LevelModel>(
-          builder: (context, value, child) => SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: 9,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
+    double size = min(MediaQuery.of(context).size.height,
+            MediaQuery.of(context).size.height) *
+        0.6;
+    return LevelWrapper(
+      title: "Tic Tac Toe",
+      description: "Win the game!",
+      done: _done,
+      levelChild: Column(
+        children: [
+          SizedBox(
+            width: size,
+            height: size,
+            child: GridView.builder(
+              itemCount: 9,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                const double bordersize = 5;
+                BorderSide borderSide = BorderSide(
+                    color: Theme.of(context).dividerColor, width: bordersize);
+                List<BoxBorder> borders = [
+                  Border(right: borderSide, bottom: borderSide),
+                  Border(
+                      right: borderSide, bottom: borderSide, left: borderSide),
+                  Border(left: borderSide, bottom: borderSide),
+                  Border(
+                      top: borderSide, bottom: borderSide, right: borderSide),
+                  Border(
+                      right: borderSide,
+                      bottom: borderSide,
+                      top: borderSide,
+                      left: borderSide),
+                  Border(left: borderSide, bottom: borderSide, top: borderSide),
+                  Border(right: borderSide, top: borderSide),
+                  Border(right: borderSide, left: borderSide, top: borderSide),
+                  Border(left: borderSide, top: borderSide),
+                ];
+                return GestureDetector(
+                  onTapDown: (details) {
+                    fieldClicked(index);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: borders[index],
                     ),
-                    itemBuilder: (BuildContext context, int index) {
-                      const double bordersize = 5;
-                      const borderSide =
-                          BorderSide(color: Colors.black, width: bordersize);
-                      List<BoxBorder> borders = [
-                        const Border(right: borderSide, bottom: borderSide),
-                        const Border(
-                            right: borderSide,
-                            bottom: borderSide,
-                            left: borderSide),
-                        const Border(left: borderSide, bottom: borderSide),
-                        const Border(
-                            top: borderSide,
-                            bottom: borderSide,
-                            right: borderSide),
-                        const Border(
-                            right: borderSide,
-                            bottom: borderSide,
-                            top: borderSide,
-                            left: borderSide),
-                        const Border(
-                            left: borderSide,
-                            bottom: borderSide,
-                            top: borderSide),
-                        const Border(right: borderSide, top: borderSide),
-                        const Border(
-                            right: borderSide,
-                            left: borderSide,
-                            top: borderSide),
-                        const Border(left: borderSide, top: borderSide),
-                      ];
-                      return GestureDetector(
-                        onTapDown: (details) {
-                          fieldClicked(index);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: borders[index],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.width * 0.02),
-                            child: FittedBox(
-                              child: game.fieldStates[index] != FieldState.empty
-                                  ? Icon(
-                                      game.fieldStates[index] ==
-                                              FieldState.player
-                                          ? Icons.radio_button_unchecked
-                                          : Icons.close,
-                                      color: Colors.black,
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
+                      child: FittedBox(
+                        child: game.fieldStates[index] != FieldState.empty
+                            ? Icon(
+                                game.fieldStates[index] == FieldState.player
+                                    ? Icons.radio_button_unchecked
+                                    : Icons.close,
+                                color: Theme.of(context).dividerColor,
+                              )
+                            : null,
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: gameState == GameState.lost
-                        ? [
-                            const Text(
-                              "You failed!",
-                              style: TextStyle(fontSize: 25),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.02,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                reset();
-                              },
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                width:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Theme.of(context).primaryColor,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0, 0),
-                                        blurStyle: BlurStyle.normal,
-                                        blurRadius: 10,
-                                      )
-                                    ]),
-                                child:
-                                    const FittedBox(child: Icon(Icons.refresh)),
-                              ),
-                            ),
-                          ]
-                        : [],
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-        ),
+          AnimatedOpacity(
+            opacity: gameState == GameState.lost ? 1 : 0,
+            duration: const Duration(milliseconds: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  const Text(
+                    "You failed!",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Ink(
+                      decoration: ShapeDecoration(
+                        shape: const CircleBorder(),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      child: IconButton(
+                        onPressed: gameState == GameState.lost
+                            ? (() {
+                                reset();
+                              })
+                            : null,
+                        icon: const Icon(Icons.refresh),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

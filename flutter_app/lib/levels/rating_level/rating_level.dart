@@ -81,10 +81,11 @@ class _RatingLevelState extends State<RatingLevel> {
                                       onStarTap(entry.key);
                                     },
                                     child: Icon(
-                                        entry.value
-                                            ? Icons.star
-                                            : Icons.star_border,
-                                        color: Colors.yellow),
+                                      entry.value
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                      color: Theme.of(context).shadowColor,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -95,11 +96,11 @@ class _RatingLevelState extends State<RatingLevel> {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
-                    child: MaterialButton(
-                      height: MediaQuery.of(context).size.height * 0.06,
-                      minWidth: MediaQuery.of(context).size.width * 0.5,
-                      color: Theme.of(context).primaryColor,
-                      disabledColor: Theme.of(context).disabledColor,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side:
+                              BorderSide(color: Theme.of(context).dividerColor),
+                          foregroundColor: Theme.of(context).dividerColor),
                       onPressed:
                           starStates.where((item) => item == true).length == 5
                               ? () {

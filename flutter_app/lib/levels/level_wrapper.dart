@@ -90,7 +90,8 @@ class _LevelWrapperState extends State<LevelWrapper> {
                         future: levelModel.getCurrentLevel(),
                         builder: (context, snapshot) {
                           return LinearProgressIndicator(
-                            backgroundColor: Theme.of(context).backgroundColor,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.background,
                             valueColor: AlwaysStoppedAnimation<Color>(
                                 Theme.of(context).primaryColor),
                             value: (snapshot.data ?? 0) / levels.length,
@@ -173,6 +174,7 @@ class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
                       Switch(
                         value: settingsProvider.getThemeMode(context) ==
                             ThemeMode.dark,
+                        activeColor: Theme.of(context).primaryColor,
                         onChanged: (p0) {
                           setState(() {
                             _darkMode = p0;
@@ -194,6 +196,7 @@ class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
                       )),
                       Switch(
                         value: false,
+                        activeColor: Theme.of(context).primaryColor,
                         onChanged: (_) {},
                       )
                     ],
@@ -210,6 +213,7 @@ class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
                       )),
                       Switch(
                         value: _sound,
+                        activeColor: Theme.of(context).primaryColor,
                         onChanged: (p0) {
                           setState(() {
                             _sound = p0;
@@ -231,6 +235,8 @@ class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
                       Slider(
                         min: 1,
                         max: 10,
+                        activeColor: Theme.of(context).shadowColor,
+                        thumbColor: Theme.of(context).primaryColor,
                         divisions: 9,
                         label: "$_volume",
                         onChanged: (double value) {
@@ -257,6 +263,8 @@ class _BottomSheetDialogState extends State<_BottomSheetDialogWidget> {
                         max: 10,
                         divisions: 9,
                         label: "$_contrast",
+                        activeColor: Theme.of(context).shadowColor,
+                        thumbColor: Theme.of(context).primaryColor,
                         onChanged: (double value) {
                           setState(() {
                             _contrast = value;
