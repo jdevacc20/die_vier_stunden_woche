@@ -27,28 +27,30 @@ class _LevelOverflowWidgetState extends State<LevelOverflowWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               LevelOverflowInputWidget(
-                labelLeft: "name:",
-                labelRight: "gender:",
+                labelLeft: "name",
+                labelRight: "gender",
               ),
               LevelOverflowInputWidget(
-                labelLeft: "age:",
-                labelRight: "birth month:",
+                labelLeft: "age",
+                labelRight: "birth month",
               ),
               LevelOverflowInputWidget(
-                labelLeft: "username:",
-                labelRight: "favourite color:",
+                labelLeft: "username",
+                labelRight: "favourite color",
                 overflowInput: true,
               ),
-              MaterialButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      done = true;
-                    });
-                  }
-                },
-                color: Theme.of(context).primaryColor,
-                child: const Text("Submit"),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: MaterialButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          done = true;
+                        });
+                      }
+                    },
+                    color: Theme.of(context).primaryColor,
+                    child: const Text("Submit")),
               )
             ],
           ),

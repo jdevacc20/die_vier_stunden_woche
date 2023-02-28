@@ -30,16 +30,21 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
       children: [
         Expanded(
           child: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
-              Text(
-                widget.labelLeft,
-                style: TextStyle(fontSize: 20),
-              ),
               TextFormField(
                 validator: validate,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: ''),
+                  border: OutlineInputBorder(),
+                  labelText: widget.labelLeft,
+                  labelStyle: TextStyle(color: Theme.of(context).shadowColor),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
+                ),
+                cursorColor: Theme.of(context).shadowColor,
                 onChanged: widget.overflowInput ? onChangedInput : null,
                 controller: widget.overflowInput ? controllerLeft : null,
               ),
@@ -48,20 +53,24 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
-              Text(
-                widget.labelRight,
-                style: TextStyle(fontSize: 20),
-              ),
               TextFormField(
                 validator: validate,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '',
-                    errorStyle: TextStyle(
-                      color: Colors.red,
-                    )),
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
+                  labelText: widget.labelRight,
+                  labelStyle: TextStyle(color: Theme.of(context).shadowColor),
+                  errorStyle: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+                cursorColor: Theme.of(context).shadowColor,
                 enabled: !widget.overflowInput,
                 controller: widget.overflowInput ? controller : null,
               ),
@@ -95,10 +104,18 @@ class _LevelOverflowInputState extends State<LevelOverflowInputWidget> {
       sharedText = value;
     }
 
-    controllerLeft.value = controllerLeft.value.copyWith(
-        text: sharedText.substring(0, 10),
-        selection: TextSelection(baseOffset: 10, extentOffset: 10));
-    controller.text = sharedText.substring(10);
+    if (sharedText.length > 10) {
+      controllerLeft.value = controllerLeft.value.copyWith(
+          text: sharedText.substring(0, 10),
+          selection: TextSelection(baseOffset: 10, extentOffset: 10));
+      controller.text = sharedText.substring(10);
+    } else {
+      controllerLeft.value = controllerLeft.value.copyWith(
+          text: sharedText.substring(0, sharedText.length),
+          selection: TextSelection(
+              baseOffset: sharedText.length, extentOffset: sharedText.length));
+      controller.text = "";
+    }
   }
 }
 
