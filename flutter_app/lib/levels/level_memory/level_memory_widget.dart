@@ -56,6 +56,7 @@ class _LevelMemoryWidget extends State<LevelMemoryWidget> {
     return LevelWrapper(
       title: "Memory Test",
       description: "Find pairs of all Icons!",
+      hint: "denk nach pisser",
       done: done,
       levelChild: GridView.count(
         crossAxisCount: 3,

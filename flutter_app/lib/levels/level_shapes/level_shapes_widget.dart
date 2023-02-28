@@ -58,6 +58,7 @@ class _LevelShapesWidget extends State<LevelShapesWidget> {
     return LevelWrapper(
       title: "Eyesight Test",
       description: "Click on the red shape!",
+      hint: "denk nach pisser",
       done: done,
       levelChild: Column(
         children: [
